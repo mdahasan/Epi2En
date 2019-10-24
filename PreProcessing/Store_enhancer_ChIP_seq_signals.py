@@ -10,6 +10,7 @@ import pickle
 import glob
 import time
 
+
 def process_pickled_file(pickle_file):
     infile = open(pickle_file, 'rb')
     return_dict = pickle.load(infile)
@@ -264,10 +265,6 @@ def main():
 
                     for i in range(start_pos, end_pos):
                         chrX_epi_signals.append(signal)
-
-                # if line_count > 0 and (line_count % 100000 == 0):
-                #     print(line_count)
-                # line_count += 1
 
         # write corresponding histone signal for enhancer regions
         print "Building signal for " + str(histone_mark) + " histon marks for sample regions..."
