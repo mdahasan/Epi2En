@@ -48,6 +48,7 @@ def process_epi_signals_by_binning(signal_list, bin_size):
     # print len(binned_epi_signals)
     return binned_epi_signals
 
+
 def process_epi_signals_by_padding(signal_list, max_enh_length):
     while len(signal_list) < max_enh_length:
         signal_list.append(0.0)
@@ -61,21 +62,16 @@ def main():
 
     start_time = time.time()
 
-    # pre-determined
-    max_enh_length = 15033      # this is exclusively for H1 cell line
-
     os.chdir(cell_line_dir)
 
     ####################################### Enhancer processing ########################################################
     cell_line_dict = dict()
     binned_cell_line_dict = dict()
-    # padded_cell_line_dict = dict()
     cell_line_name = ""
 
     # process enhancer files and store in a pickle file
     print "Processing enhancer files..."
     for file in glob.glob("*.enh"):
-        print file
         method_name = (file.split('.')[0]).split('_')[0]
         cell_line_name = (file.split('.')[0]).split('_')[1]
 
@@ -92,18 +88,15 @@ def main():
 
                 if len(cols[3:]) > 0:
                     binned_epi_signals = process_epi_signals_by_binning([float(x) for x in cols[3:]], int(bin_size))
-                    # padded_epi_signals = process_epi_signals_by_padding([float(x) for x in cols[3:]], max_enh_length)
                     epi_signals = [float(x) for x in cols[3:]]
 
                     # to check if each histone mark has entry for the region
                     if len(epi_signals) > 0:
                         if key in binned_cell_line_dict:
                             binned_cell_line_dict[key].append(binned_epi_signals)
-                            # padded_cell_line_dict[key].append(padded_epi_signals)
                             cell_line_dict[key].append(epi_signals)
                         else:
                             binned_cell_line_dict[key] = [binned_epi_signals]
-                            # padded_cell_line_dict[key] = [padded_epi_signals]
                             cell_line_dict[key] = [epi_signals]
 
     print "Total enhancer: ", len(binned_cell_line_dict), len(binned_cell_line_dict[key])
@@ -112,37 +105,28 @@ def main():
     enhancer_count = 0
     file_count = 1
     binned_sub_cell_line_dict = dict()
-    padded_sub_cell_line_dict = dict()
 
     for key in binned_cell_line_dict:
         binned_sub_cell_line_dict[key] = binned_cell_line_dict[key]
-        # padded_sub_cell_line_dict[key] = padded_cell_line_dict[key]
-
         enhancer_count += 1
 
         if (enhancer_count % 50000) == 0 or enhancer_count == total_enhancer:
             print enhancer_count, total_enhancer
             file_name_binned = str(method_name) + '_' + str(cell_line_name) + '_' + str(bin_size) + '_binned_enhancers_epi_signals_' + str(file_count) + '.pkl'
-            file_name_padded = str(cell_line_name) + '_padded_enhancers_epi_signals_' + str(file_count) + '.pkl'
             print "Pickle sub sample enhancer epi signal dictionary..."
             pickle_data(binned_cell_line_dict, file_name_binned)
-            # pickle_data(padded_cell_line_dict, file_name_padded)
 
             binned_sub_cell_line_dict.clear()
-            # padded_sub_cell_line_dict.clear()
             file_count += 1
-
 
     ####################################### Non-enhancer processing ########################################################
     # process non-enhancer files and store in a pickle file
     cell_line_dict = dict()
     binned_cell_line_dict = dict()
-    # padded_cell_line_dict = dict()
 
-    # total_non_enhancer = 80000         # pre-determined for H1 cell line since PEDLA-H1 has 5,870 enhancers, few more than 10 time of that number
-    #   this number of non-enhancer is exclusively for PEDLA-H1 dataset
+    # These are predetermined number for given cell-lines, will change for new cell-lines #
     print cell_line_name
-    if cell_line_name == "H1":                # ******* absolutely need to change ******** #
+    if cell_line_name == "H1":             # ******* absolutely need to change ******** #
         total_non_enhancer = 90000         # pre-determined for GM12878
     if cell_line_name == "HepG2":
         total_non_enhancer = 140000
@@ -155,10 +139,8 @@ def main():
     if cell_line_name == "K562":
         total_non_enhancer = 180000
 
-
     print "Processing non-enhancer files..."
     for file in glob.glob("*.nenh"):
-        print file
         line_count = 0
         method_name = (file.split('.')[0]).split('_')[0]
         cell_line_name = (file.split('.')[0]).split('_')[1]
@@ -175,20 +157,16 @@ def main():
                 key = str(chromosome) + '_' + str(start_pos) + '_' + str(end_pos)
 
                 if len(cols[3:]) > 100:
-                    # epi_signals = process_epi_signals([float(x) for x in cols[3:]], int(bin_size))
                     binned_epi_signals = process_epi_signals_by_binning([float(x) for x in cols[3:]], int(bin_size))
-                    # padded_epi_signals = process_epi_signals_by_padding([float(x) for x in cols[3:]], max_enh_length)
                     epi_signals = [float(x) for x in cols[3:]]
 
                     # to check if each histone mark has entry for the region
                     if len(epi_signals) > 0:
                         if key in binned_cell_line_dict:
                             binned_cell_line_dict[key].append(binned_epi_signals)
-                            # padded_cell_line_dict[key].append(padded_epi_signals)
                             cell_line_dict[key].append(epi_signals)
                         else:
                             binned_cell_line_dict[key] = [binned_epi_signals]
-                            # padded_cell_line_dict[key] = [padded_epi_signals]
                             cell_line_dict[key] = [epi_signals]
 
                     if line_count == total_non_enhancer:
@@ -196,7 +174,6 @@ def main():
                     line_count += 1
 
     print "Total Non-enhancer: ", len(binned_cell_line_dict)
-
 
     total_non_enhancer = len(binned_cell_line_dict)
     non_enhancer_count = 0
@@ -206,26 +183,21 @@ def main():
 
     for key in binned_cell_line_dict:
         binned_sub_cell_line_dict[key] = binned_cell_line_dict[key]
-        # padded_sub_cell_line_dict[key] = padded_cell_line_dict[key]
-
         non_enhancer_count += 1
 
         if (non_enhancer_count%50000) == 0 or non_enhancer_count == total_non_enhancer:
             print non_enhancer_count, total_non_enhancer
-            file_name_binned = str(method_name) + '_' + str(cell_line_name) + '_' + str(bin_size) +  '_binned_nonenhancers_epi_signals_' + str(file_count) + '.pkl'
-            # file_name_padded = str(cell_line_name) + '_padded_nonenhancers_epi_signals_' + str(file_count) + '.pkl'
+            file_name_binned = str(method_name) + '_' + str(cell_line_name) + '_' + str(bin_size) + '_binned_nonenhancers_epi_signals_' + str(file_count) + '.pkl'
             print "Pickle sub sample nonenhancer epi signal dictionary..."
             pickle_data(binned_sub_cell_line_dict, file_name_binned)
-            # pickle_data(padded_sub_cell_line_dict, file_name_padded)
 
             binned_sub_cell_line_dict.clear()
-            # padded_sub_cell_line_dict.clear()
 
             file_count += 1
 
-
     end_time = time.time()
     print "Time required for the process: ", (end_time - start_time)
+
 
 if __name__ == '__main__':
     main()
