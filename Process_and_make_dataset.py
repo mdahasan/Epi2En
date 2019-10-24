@@ -9,6 +9,7 @@ import numpy as np
 import time
 from sklearn.preprocessing import StandardScaler
 
+
 def process_pickled_file(pickle_file):
     infile = open(pickle_file, 'rb')
     return_dict = pickle.load(infile)
@@ -23,26 +24,28 @@ def pickle_data(D, file_name):
     pickle.dump(D, outfile)
     outfile.close()
 
+
 # returns scaled training dataset
 def getScaledData(dataMatrix):
     scaler = StandardScaler().fit(dataMatrix)
     return scaler.transform(dataMatrix)
 
+
 def check_matrix_shape(epi_matrix):
     good_matrix = False
 
-    print len(epi_matrix)
+    # print len(epi_matrix)
 
     if not len(epi_matrix) == 12:
         return good_matrix
 
     for row in range(0, len(epi_matrix)):
-        print len(epi_matrix[row])
+        # print len(epi_matrix[row])
         if len(epi_matrix[row]) == 10:
             good_matrix = True
         else:
             good_matrix = False
-            print len(epi_matrix[row])
+            # print len(epi_matrix[row])
             break
 
     return good_matrix
@@ -93,13 +96,13 @@ def process_epi_dataset(epidata_file, region_file=None, non_enh_size = 1):
     end_time = time.time()
     print "Time needed to read epigenetics info: ", (end_time - start_time)
 
-    # epi_region_pair_list = process_pickled_file(region_file)
+    epi_region_pair_list = process_pickled_file(region_file)
     #
-    # c = zip(epi_data_in_pair_list, epi_region_pair_list)
-    # random.shuffle(c)
-    # epi_region_pair_list, epi_region_pair_list = zip(*c)
+    c = zip(epi_data_in_pair_list, epi_region_pair_list)
+    random.shuffle(c)
+    epi_region_pair_list, epi_region_pair_list = zip(*c)
 
-    random.shuffle(epi_data_in_pair_list)       # randomly shuffle the dataset before splitting into training/testing
+    # random.shuffle(epi_data_in_pair_list)       # randomly shuffle the dataset before splitting into training/testing
 
     sample_epi_matrices = list()
     sample_epi_regions = list()
@@ -112,7 +115,7 @@ def process_epi_dataset(epidata_file, region_file=None, non_enh_size = 1):
     for i in range(len(epi_data_in_pair_list)):
         if check_matrix_shape(epi_data_in_pair_list[i][0]):
             sample_epi_matrices.append(np.array(epi_data_in_pair_list[i][0]))
-            # sample_epi_regions.append(epi_region_pair_list[i][0])
+            sample_epi_regions.append(epi_region_pair_list[i][0])
             sample_labels.append(epi_data_in_pair_list[i][1])
         else:
             if epi_data_in_pair_list[i][1] == 1:
@@ -128,43 +131,6 @@ def process_epi_dataset(epidata_file, region_file=None, non_enh_size = 1):
     print "Size of initial dataset: ", len(sample_epi_matrices)
     print "Percentage of non-enhancer: ", non_enh_size
 
-    ######### for dataset class percentage experiment ###########
-    # enhs = 32830
-    # nenhs = enhs * non_enh_size
-    #
-    # sub_sampled_matrices = list()
-    # sub_sampled_lables = list()
-    #
-    # enh_count = 0
-    # non_enh_count = 0
-    #
-    # for i in range(len(sample_labels)):
-    #     if sample_labels[i] == 1 and enh_count < enhs:
-    #         sub_sampled_matrices.append(sample_epi_matrices[i])
-    #         sub_sampled_lables.append(sample_labels[i])
-    #         enh_count += 1
-    #
-    #     if sample_labels[i] == 0 and non_enh_count < nenhs:
-    #         sub_sampled_matrices.append(sample_epi_matrices[i])
-    #         sub_sampled_lables.append(sample_labels[i])
-    #         non_enh_count += 1
-    #
-    #     if enh_count > enhs and non_enh_count > nenhs:
-    #         break
-    #
-    # sample_epi_matrices = sub_sampled_matrices
-    # sample_labels = sub_sampled_lables
-    #
-    # print "Size of reduced dataset: ", len(sample_epi_matrices)
-    #
-    # # shuffling new dataset
-    # c = list(zip(sample_epi_matrices, sample_labels))
-    # random.shuffle(c)
-    # sample_epi_matrices, sample_labels = zip(*c)
-    #############################################################
-
-
-
     reshaped_sample_epi_matrices = reshape_matrix(sample_epi_matrices)
     reshaped_sample_labels = reshape_list(sample_labels)
 
@@ -174,7 +140,7 @@ def process_epi_dataset(epidata_file, region_file=None, non_enh_size = 1):
 
         'sample_matrices': sample_epi_matrices,
         'sample_labels': sample_labels,
-        # 'sample_region': sample_epi_regions,
+        'sample_region': sample_epi_regions,
     }
 
     return epi_dataset
