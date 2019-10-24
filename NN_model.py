@@ -105,10 +105,10 @@ def run_cross_validation_with_only_epi_data(epi_dataset, exp_name):
     model = Sequential()
     model.add(Conv1D(128, 3, activation='relu', input_shape=input_shape))
     model.add(Conv1D(64, 3, activation='relu'))
-    model.add(MaxPooling1D(pool_size=2))
+    model.add(MaxPooling1D(pool_size=2, padding = 'same'))
     model.add(Dropout(0.25))
     model.add(Conv1D(64, 3, activation='relu'))
-    model.add(MaxPooling1D(pool_size=2))
+    model.add(MaxPooling1D(pool_size=2, padding = 'same'))
     model.add(Dropout(0.25))
     model.add(Flatten())
 
@@ -220,23 +220,23 @@ def run_cross_validation_with_only_epi_data(epi_dataset, exp_name):
     }
 
     ########## These files are for plotting AUC and AUC-PR #########
-    f_fpr = open(str(exp_name) + '_fpr.txt', 'a')
-    f_tpr = open(str(exp_name) + '_tpr.txt', 'a')
-    f_precision = open(str(exp_name) + '_precision.txt', 'a')
-    f_recall = open(str(exp_name) + '_recall.txt', 'a')
-    f_validation = open(str(exp_name) + '_for_validation.txt', 'a')
-
-    write_data_on_file(fpr_test, f_fpr)
-    f_fpr.close()
-
-    write_data_on_file(tpr_test, f_tpr)
-    f_tpr.close()
-
-    write_data_on_file(precision_test, f_precision)
-    f_precision.close()
-
-    write_data_on_file(recall_test, f_recall)
-    f_recall.close()
+    # f_fpr = open(str(exp_name) + '_fpr.txt', 'a')
+    # f_tpr = open(str(exp_name) + '_tpr.txt', 'a')
+    # f_precision = open(str(exp_name) + '_precision.txt', 'a')
+    # f_recall = open(str(exp_name) + '_recall.txt', 'a')
+    # f_validation = open(str(exp_name) + '_for_validation.txt', 'a')
+    #
+    # write_data_on_file(fpr_test, f_fpr)
+    # f_fpr.close()
+    #
+    # write_data_on_file(tpr_test, f_tpr)
+    # f_tpr.close()
+    #
+    # write_data_on_file(precision_test, f_precision)
+    # f_precision.close()
+    #
+    # write_data_on_file(recall_test, f_recall)
+    # f_recall.close()
 
     # for i in range(len(Y_pred_label_test)):
     #     f_validation.write(str(test_regions[i]) + '\t' + str(Y_pred_label_test[i]) + '\t' + str(Y_test[i]) + '\n')
