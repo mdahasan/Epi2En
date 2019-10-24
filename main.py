@@ -19,6 +19,7 @@ parser = argparse.ArgumentParser(description="Ehancer prediction tool")
 group = parser.add_mutually_exclusive_group()
 group.add_argument('-c', '--crossvalidation', action='store_true', help='-c for Cross Validation')
 group.add_argument('-a', '--acrosstest', action='store_true', help='-a for across cell line testing')
+group.add_argument('-p', '--predictenhancers', action='store_true', help='-p predict enhancer regions')
 
 parser.add_argument('-e', '--epidata', metavar='', required=True, help='-e for epigenetics dataset')
 parser.add_argument('-r', '--region', metavar="", required=False, help='-s for corresponding epigenetics regions dataset')
@@ -162,6 +163,12 @@ def main():
                         )
 
         fopen.close()
+
+    if args.predictenhancers:
+        data = DataProcessing(args.epidata, args.region)
+        train_model = ModelLoad(data, args.model, name_of_the_experiment)
+
+        train_model.get_enhancer_region_probability()
 
 
 if __name__ == '__main__':
