@@ -44,6 +44,8 @@ class ModelLoad(object):
     def get_across_cell_line_perfromance(self):
         return run_across_cell_line_exp(self.epi_dataset, self.model, self.exp_name)
 
+    def get_enhancer_region_probability(self):
+        return run_enhancer_prob(self.epi_dataset, self.model, self.exp_name)
 
 def write_data_on_file(data, file_name):
     for i in range(len(data)):
@@ -51,6 +53,38 @@ def write_data_on_file(data, file_name):
 
     file_name.write('\n')
 
+
+def run_enhancer_prob(epi_data, model, exp_name):
+
+    sample_matrices = epi_data['sample_matrices']
+    sample_region = epi_data['sample_region']
+    sample_matrices = reshape_matrix(sample_matrices)
+
+    row, col = sample_matrices[0].shape
+    num_classes = 2
+
+    num_sample = len(sample_matrices)
+    model = load_model(model)
+
+    Y_pred = model.predict(sample_matrices)
+    print Y_pred
+
+    fopen = open('Predicted_K562_enhancer_regions_3.txt', 'w')
+
+    for i in range(len(Y_pred)):
+        chr = sample_region[i].split('_')[0]
+        start = sample_region[i].split('_')[1]
+        end = sample_region[i].split('_')[2]
+
+        if Y_pred[i][0] > 0.5:
+            label = "nenh"
+        else:
+            label = "enh"
+
+        fopen.write(str(chr) + '\t' + str(start) + '\t' +
+                    str(end) + '\t' + str(label) + '\n')
+
+    fopen.close()
 
 def run_across_cell_line_exp(epi_dataset, model, exp_name):
 
