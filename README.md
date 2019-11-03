@@ -25,4 +25,24 @@ After all `bigWig` files are converted and stored as `bed` file in individual ce
 python Store_enhancer_ChIP_seq_signals.py <cell_line_directory_path> <cell_line_region_file> <data_type>
 ```
 
-For example, if we want to process all the enhancer regions for Gm12878 cell-line, the `cell_line_directory_path` is the `path_to_Gm12878` that contains the processed epigenetics marker `bed` files of `Gm12878` and the `cell_line_region_file` is the file that contains `DEEP_GM12878_enhancers.txt` for DEEP data and `PEDLA_GM12878_enhancers.txt` for PEDLA data. Similar process for non-enhancer data. User can define the `type`. The `type` is used for the file extension that will be used later. We used `enh` for enhancer file processing and `nenh` for non-enhancer file processing.
+For example, if we want to process all the enhancer regions for Gm12878 cell-line, the `cell_line_directory_path` is the `path_to_Gm12878` that contains the processed epigenetics marker `bed` files of `Gm12878` and the `cell_line_region_file` is the file that contains `DEEP_GM12878_enhancers.txt` for DEEP data and `PEDLA_GM12878_enhancers.txt` for PEDLA data (one file at a time, either DEEP or PEDLA). Similar process for non-enhancer data. User can define the `type`. The `type` is used for the file extension that will be used later. We used `enh` for enhancer file processing and `nenh` for non-enhancer file processing. 
+
+This code will produce same number of `.enh` and `.nenh` file as the `.bed` files representing each epigenetic markers.
+
+The next step is to process these `.enh` and `.nenh` files to create the input for Epi2En. The script is provided in the `PreProcessing` directory here.
+
+```
+python Process_and_combine_epi_signals.py <cell_line_directory> <number_of_bins>
+```
+
+Here the `cell_line_directory` is similar as before i.e. `Gm12878` which now contains, along with the `bed` files, `enh` and `nenh` files. `number_of_bins` was selected as 10 (see manuscript). *Inside this script we have predefine the size of the non-enhancers regions we trained our model with. This may needs to be changed if the user desires.*
+
+After running this script, it produces multiple `.pkl` file where each contains a fraction of the whole processed input. This was done for fast processing of `.pkl` files.
+
+Finally, these seperate `.pkl` files are combined into one input file that contains all the enhancer/non-enahncer sample formatted into matrix format and added with label (1 for enhancers and 0 for non-enhancers)
+
+```
+python Build_epigenetics_dataset.py <cell_line_directory>
+```
+
+Similarly, here the `cell_line_directory` is any of the cell-line directory, i.e. `Gm12878`.
