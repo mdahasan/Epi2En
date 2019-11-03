@@ -45,4 +45,21 @@ Finally, these seperate `.pkl` files are combined into one input file that conta
 python Build_epigenetics_dataset.py <cell_line_directory>
 ```
 
-Similarly, here the `cell_line_directory` is any of the cell-line directory, i.e. `Gm12878`.
+Similarly, here the `cell_line_directory` is any of the cell-line directory, i.e. `Gm12878`. For analysis we also produces a file that contains the regions of corresponding enhancer and non-enhancer samples.
+
+
+## Training Epi2En
+
+To train the model, the scripts are provided.
+
+The `main.py` file contains multiple options for training the model
+
+`-c` for cross-validation
+`-a` for across cell-line performance
+`-p` for enhancer region prediction on unknown regions
+
+`-e` to provide processed epigenetics data from the previous section. This is a `.pkl` file that contains the labelled matrix format sample data. (mandatory input)
+`-r` to provide processed enhancer/non-enhancer regions. This is a `.pkl` processed in the previous section (not a mandatory input)
+`-m` if an already trained model is available. This is used for the prediction of enhancers regions (not a mandatory input)
+
+`-n` the name of the experiment (mantadory input)
