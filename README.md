@@ -54,12 +54,12 @@ To train the model, the scripts are provided.
 
 The `main.py` file contains multiple options for training the model
 
-`-c` for cross-validation
-`-a` for across cell-line performance
-`-p` for enhancer region prediction on unknown regions
-
-`-e` to provide processed epigenetics data from the previous section. This is a `.pkl` file that contains the labelled matrix format sample data. (mandatory input)
-`-r` to provide processed enhancer/non-enhancer regions. This is a `.pkl` processed in the previous section (not a mandatory input)
-`-m` if an already trained model is available. This is used for the prediction of enhancers regions (not a mandatory input)
-
-`-n` the name of the experiment (mantadory input)
+`-c` for cross-validation  
+`-a` for across cell-line performance  
+`-p` for enhancer region prediction on unknown regions  
+  
+`-e` to provide processed epigenetics data from the previous section. This is a `.pkl` file that contains the labelled matrix format sample data. (mandatory input)  
+`-r` to provide processed enhancer/non-enhancer regions. This is a `.pkl` processed in the previous section (not a mandatory input)  
+`-m` if an already trained model is available. This is used for the prediction of enhancers regions (not a mandatory input)  
+  
+`-n` the name of the experiment (mantadory input)  
