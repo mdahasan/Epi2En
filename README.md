@@ -4,3 +4,4 @@ Epi2En is a Convolutional neural network based enhancer prediction tool. The too
 
 ## Data Preprocessing
 
+The dataset provided contains ChIP-seq data collected from ENCODE. The directory contains seperate directory for each cell-line data. Each of those directory contains the `.bigWig` file and a tool `bigWigToBedGraph` to convert the `bigWig` file into `bed` file
