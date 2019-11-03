@@ -63,3 +63,22 @@ The `main.py` file contains multiple options for training the model
 `-m` if an already trained model is available. This is used for the prediction of enhancers regions (not a mandatory input)  
   
 `-n` the name of the experiment (mantadory input)  
+
+
+For corss-validation
+
+```
+python main.py -c -e <processed_epigenetics_data> -n <name_of_the_experiment>
+```
+
+During training the model save the trained weights in `hdf5` format. We can use the `hdf5` weights later for the prediction.
+  
+For predicting using pre-trained model
+
+```
+python main.py -p -m <pre_trained_model> -n <name_of_the_experiment>
+```
+
+Here the `pre_trained_model` is the `hdf5` file generated during training. 
+
+*The code will produce some additional results files which were used for the analysis purpose*
