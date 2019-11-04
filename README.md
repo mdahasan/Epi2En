@@ -82,3 +82,7 @@ python main.py -p -m <pre_trained_model> -n <name_of_the_experiment>
 Here the `pre_trained_model` is the `hdf5` file generated during training. 
 
 *The code will produce some additional results files which were used for the analysis purpose*
+
+Dataset Sources:
+1.  Kleftogiannis, D., Kalnis, P., Bajic, V.B.: DEEP: a general computational framework for predicting enhancers. Nucleic Acids Res.43(1), 6 (2015)
+2. Liu, F., Li, H., Ren, C., Bo, X., Shu, W.: PEDLA: predicting enhancers with a deep learning-based algorithmicframework. Sci. Rep.6, 28517 (2016)
